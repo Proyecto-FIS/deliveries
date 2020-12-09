@@ -83,7 +83,7 @@ app.post(BASE_API_PATH + "/contacts", (req, res) => {
  * @route GET /deliveries
  * @group Deliveries - Deliveries
  * @param {string} deliveryId.query -  If empty returns all deliveries
- * @returns {Delivery} 200 - Returns wheter selected delivery or all products
+ * @returns {Delivery} 200 - Returns wheter selected delivery or all deliveries
  * @returns {DeliveryError} default - unexpected error
  */
 const getMethod = (req, res) => {
@@ -106,6 +106,12 @@ const getMethod = (req, res) => {
     }
   };
 
+/**
+ * @typedef format
+ * @property {string}  type
+ * @property {integer}     price
+ *
+ */
 
 
 /**
@@ -131,7 +137,7 @@ const getMethod = (req, res) => {
  * @group Deliveries - Deliveries
  * @param {Delivery} delivery.body.required - New delivery
  * @returns {integer} 200 - Returns the  created delivery
- * @returns {DeliveriesError} default - unexpected error
+ * @returns {DeliveryError} default - unexpected error
  */
 const postMethod = (req, res) => {
     console.log(Date() + "-POST /deliveries");
@@ -156,51 +162,106 @@ const postMethod = (req, res) => {
   };
   
 
- /**
+
+/**
  * Update an existing delivery
- * @route PUT /delivery
- * @group delivery - Product delivery
- * @param {Delivery} delivery.body.required - Delivery to be updated
- * @returns {Delivery} 200 - Returns the updated delivery
+ * @route PUT /deliveries
+ * @group Deliveries - Deliveries
+ * @param {string} deliveryId.query.required -  Delivery Id
+ * @param {Delivery.model} delivery.body.required - New value for the delivery
+ * @returns {Delivery} 200 - Returns the current state for this deliveries
  * @returns {DeliveryError} default - unexpected error
+ */
+const putMethod = (req, res) => {
+  console.log(Date() + "-PUT /deliveries/id");
+  const deliveryId = req.query.deliveryId;
+  const newDelivery = req.body;
+
+  database.db.findOne({ _id: deliveryId }).exec(function (err, delivery) {
+    if (delivery) {
+      database.db.update(
+        delivery,
+        { $set: newDelivery},
+        function (err, numReplaced) {
+          if (numReplaced === 0) {
+            console.error(Date() + " - " + err);
+            res.sendStatus(404);
+          } else {
+            res.status(204).json(newDelivery);
+          }
+        }
+      );
+    } else {
+      // If no document is found, delivery is null
+      res.sendStatus(404);
+    }
+  });
+};
+
+
+/**
+ * Delete an existing delivery
+ * @route DELETE /deliveries
+ * @group Deliveries - Deliveries
+ * @param {string} deliveryId.query.required -  Delivery Id
+ * @returns {Delivery} 200 - Returns the current state for this deliveries
+ * @returns {DeliveryError} default - unexpected error
+ */
+const deleteMethod = (req, res) => {
+  console.log(Date() + "-DELETE /deliveries/id");
+  const deliveryId = req.query.deliveryId;
+  database.db.remove({ _id: deliveryId }, {}, function (err, numRemoved) {
+    if (numRemoved === 0) {
+      console.error(Date() + " - " + err);
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(204);
+    }
+  });
+};
+
+module.exports.register = (apiPrefix, router) => {
+  router.get(apiPrefix + "/deliveries", getMethod);
+  router.post(apiPrefix + "/deliveries", postMethod);
+  router.put(apiPrefix + "/deliveries", putMethod);
+  router.delete(apiPrefix + "/deliveries", deleteMethod);
+};
+
+/**
+ * Get all returns if empty, or selected return by _id
+ * @route GET /returns
+ * @group Returns - Returns
+ * @param {string} returnId.query -  If empty returns all returns
+ * @returns {Returns} 200 - Returns wheter selected return or all returns
+ * @returns {ReturnsError} default - unexpected error
+ */
+
+/**
+ * Create a new return when is request for user
+ * @route POST /returns
+ * @group Returns - Returns
+ * @param {Returns} returns.body.required - New return
+ * @returns {integer} 200 - Returns the  created return
+ * @returns {ReturnError} default - unexpected error
  */
 
  /**
- * Cancel an existing delivery
- * @route DELETE /delivery
- * @group delivery - Product delivery
- * @param {Delivery} delivery.body.required - Delivery requested
- * @returns {Delivery} 200 - Returns the requested delivery for this user
- * @returns {DeliveryError} default - unexpected error
+ * Update an existing return
+ * @route PUT /returns
+ * @group Returns - Returns
+ * @param {string} returnId.query.required -  Return Id
+ * @param {Return.model} return.body.required - New value for the return
+ * @returns {Return} 200 - Returns the current state for this returns
+ * @returns {ReturnError} default - unexpected error
  */
 
  /**
- * Get all deliveries for an user
- * @route GET /delivery
- * @group delivery - Customer delivery
- * @param {Customer} customer.body.required - Deliveries requested
- * @returns {Delivery} 200 - Returns the requested delivery for this user
- * @returns {DeliveryError} default - unexpected error
- */
-
- /**
- * Update an existing delivery from a toaster
- * @route PUT /delivery
- * @group toaster - Toaster delivery
- * @param {Product} product.body.required - Product to be updated
- * @param {Toaster} toaster.body.required - Toaster delivery
- * @returns {Delivery} 200 - Returns the updated delivery
- * @returns {DeliveryError} default - unexpected error
- */
-
- /**
- * Return an existing product from a delivery
- * @route PUT /delivery
- * @group return - Customer return
- * @param {Delivery} delivery.body.required - Delivery to be updated
- * @param {Product} customer.body.required - Product delivery
- * @returns {Delivery} 200 - Returns the updated delivery
- * @returns {DeliveryError} default - unexpected error
+ * Delete an existing return
+ * @route DELETE /returns
+ * @group Returns - Returns
+ * @param {string} returnId.query.required -  Return Id
+ * @returns {Return} 200 - Returns the current state for this returns
+ * @returns {ReturnError} default - unexpected error
  */
 
 expressSwagger(options);
