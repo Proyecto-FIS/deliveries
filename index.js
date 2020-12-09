@@ -78,19 +78,37 @@ app.post(BASE_API_PATH + "/contacts", (req, res) => {
     
 });
 
-
- /**
- * Get delivery for an user
- * @route GET /delivery
- * @group delivery - Product delivery
- * @param {Delivery} delivery.body.required - Delivery requested
- * @returns {Delivery} 200 - Returns the requested delivery for this user
+/**
+ * Get all delivery if empty, or selected delivery by _id
+ * @route GET /deliveris
+ * @group Deliveris - Deliveris
+ * @param {string} deliveryId.query -  If empty returns all deliveries
+ * @returns {Delivery} 200 - Returns wheter selected delivery or all products
  * @returns {DeliveryError} default - unexpected error
  */
+const getMethod = (req, res) => {
+    console.log(Date() + "-GET /deliveries");
+    const deliveryId = req.query.deliveryId;
+  
+    if (deliveryId) {
+      database.db.findOne({ _id: deliveryId }).exec(function (err, delivery) {
+        if (delivery) {
+          res.send(delivery);
+        } else {
+          // If no document is found, delivery is null
+          res.sendStatus(404);
+        }
+      });
+    } else {
+      database.db.find({}).exec(function (err, deliveries) {
+        res.send(deliveries);
+      });
+    }
+  };
 
  /**
  * Create a new delivery for an user
- * @route POST /delivery
+ * @route POST /customer/delivery
  * @group delivery - Product delivery
  * @returns {integer} 200 - Returns delivery id 
  * @returns {DeliveryError} default - unexpected error
