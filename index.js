@@ -79,9 +79,9 @@ app.post(BASE_API_PATH + "/contacts", (req, res) => {
 });
 
 /**
- * Get all delivery if empty, or selected delivery by _id
- * @route GET /deliveris
- * @group Deliveris - Deliveris
+ * Get all deliveries if empty, or selected delivery by _id
+ * @route GET /deliveries
+ * @group Deliveries - Deliveries
  * @param {string} deliveryId.query -  If empty returns all deliveries
  * @returns {Delivery} 200 - Returns wheter selected delivery or all products
  * @returns {DeliveryError} default - unexpected error
@@ -106,13 +106,55 @@ const getMethod = (req, res) => {
     }
   };
 
- /**
- * Create a new delivery for an user
- * @route POST /customer/delivery
- * @group delivery - Product delivery
- * @returns {integer} 200 - Returns delivery id 
- * @returns {DeliveryError} default - unexpected error
+
+
+/**
+ * @typedef Delivery
+ * @property {integer} _id           - UUID
+ * @property {integer} _providerId   - Identifier
+ * @property {integer} _userId      - Identifier
+ * @property {string}  products   - products
+ * @property {integer}     state  - state
+ * @property {string}  paid        - paid
+ * @property {string}  createDate    - createDate
  */
+
+/**
+ * @typedef DeliveryError
+ * @property {string} todo.required - TODO
+ */
+
+
+/**
+ * Create a new deliveries when a payment is generated
+ * @route POST /deliveries
+ * @group Deliveries - Deliveries
+ * @param {Delivery} delivery.body.required - New delivery
+ * @returns {integer} 200 - Returns the  created delivery
+ * @returns {DeliveriesError} default - unexpected error
+ */
+const postMethod = (req, res) => {
+    console.log(Date() + "-POST /deliveries");
+    const newDelivery = {
+      userId: "UUID",
+      providerId: "UUID",
+      products: req.body.products,
+      state: req.body.state,
+      paid: req.body.paid,
+      createDate: req.body.createDate,
+    };
+    const { valid, errors } = validateDeliveryData(newDelivery);
+    if (!valid) return res.status(400).json(errors);
+    database.db.insert(newDelivery, (err) => {
+      if (err) {
+        console.error(Date() + " - " + err);
+        res.send(500);
+      } else {
+        res.status(201).json(newDelivery);
+      }
+    });
+  };
+  
 
  /**
  * Update an existing delivery
