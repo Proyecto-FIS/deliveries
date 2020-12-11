@@ -1,7 +1,7 @@
 {
   "name": "contacts",
   "version": "1.0.0",
-  "description": "API Contacts",
+  "description": "API Contacts v2",
   "main": "index.js",
   "repository": {
     "type": "git",
