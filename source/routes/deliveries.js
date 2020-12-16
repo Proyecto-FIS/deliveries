@@ -1,4 +1,5 @@
 const express = require("express");
+const Delivery = require("../models/delivery");
 
 /**
  * @typedef Delivery
@@ -26,7 +27,26 @@ const express = require("express");
  * @returns {DeliveryError} default - unexpected error
  */
 const getMethod = (req, res) => {
-  res.send("Test");
+  //res.send("Test");
+
+  console.log(Date() + "-GET /deliveries");
+  const deliveryId = req.query.deliveryId;
+
+  if (deliveryId) {
+    Delivery.findOne({ _id: deliveryId }).exec(function (err, delivery) {
+      if (delivery) {
+        res.send(delivery);
+      } else {
+        // If no document is found, product is null
+        res.sendStatus(404);
+      }
+    });
+  } else {
+    Delivery.find({}).exec(function (err, deliveries) {
+      res.send(deliveries);
+    });
+  }
+
 }
 
 /**
@@ -38,7 +58,23 @@ const getMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const postMethod = (req, res) => {
-  res.send("Coffaine - Deliveries microservice");
+  //res.send("Coffaine - Deliveries microservice");
+  console.log(Date() + "-POST /deliveries");
+  const newDelivery = {
+    name: req.body.name,
+    description: req.body.description,
+    origin: req.body.origin,
+    destination: req.body.destination
+  };
+
+  Delivery.create(newDelivery, (err) => {
+    if (err) {
+      console.error(Date() + " - " + err);
+      res.sendStatus(500);
+    } else {
+      res.status(201).json(newDelivery);
+    }
+  });
 }
 
 /**
