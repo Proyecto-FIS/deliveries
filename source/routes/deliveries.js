@@ -1,8 +1,4 @@
 const express = require("express");
-const { validateDeliveryData } = require("../../utils/validators");
-
-const database = require("../database");
-
 
 /**
  * @typedef Delivery
@@ -21,7 +17,6 @@ const database = require("../database");
  */
 
 
-
 /**
  * Get all deliveries if empty, or selected delivery by _id
  * @route GET /deliveries
@@ -31,24 +26,8 @@ const database = require("../database");
  * @returns {DeliveryError} default - unexpected error
  */
 const getMethod = (req, res) => {
-    console.log(Date() + "-GET /deliveries");
-    const deliveryId = req.query.deliveryId;
-  
-    if (deliveryId) {
-      database.db.findOne({ _id: deliveryId }).exec(function (err, delivery) {
-        if (delivery) {
-          res.send(delivery);
-        } else {
-          // If no document is found, delivery is null
-          res.sendStatus(404);
-        }
-      });
-    } else {
-      database.db.find({}).exec(function (err, deliveries) {
-        res.send(deliveries);
-      });
-    }
-  };
+  res.send("Test");
+}
 
 /**
  * Create a new deliveries when a payment is generated
@@ -59,28 +38,8 @@ const getMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const postMethod = (req, res) => {
-    console.log(Date() + "-POST /deliveries");
-    const newDelivery = {
-      userId: "UUID",
-      providerId: "UUID",
-      products: req.body.products,
-      state: req.body.state,
-      paid: req.body.paid,
-      createDate: req.body.createDate,
-    };
-    const { valid, errors } = validateDeliveryData(newDelivery);
-    if (!valid) return res.status(400).json(errors);
-    database.db.insert(newDelivery, (err) => {
-      if (err) {
-        console.error(Date() + " - " + err);
-        res.send(500);
-      } else {
-        res.status(201).json(newDelivery);
-      }
-    });
-  };
-  
-
+  res.send("Coffaine - Deliveries microservice");
+}
 
 /**
  * Update an existing delivery
@@ -92,31 +51,8 @@ const postMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const putMethod = (req, res) => {
-  console.log(Date() + "-PUT /deliveries/id");
-  const deliveryId = req.query.deliveryId;
-  const newDelivery = req.body;
-
-  database.db.findOne({ _id: deliveryId }).exec(function (err, delivery) {
-    if (delivery) {
-      database.db.update(
-        delivery,
-        { $set: newDelivery},
-        function (err, numReplaced) {
-          if (numReplaced === 0) {
-            console.error(Date() + " - " + err);
-            res.sendStatus(404);
-          } else {
-            res.status(204).json(newDelivery);
-          }
-        }
-      );
-    } else {
-      // If no document is found, delivery is null
-      res.sendStatus(404);
-    }
-  });
-};
-
+  res.send("Test");
+}
 
 /**
  * Delete an existing delivery
@@ -127,17 +63,8 @@ const putMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const deleteMethod = (req, res) => {
-  console.log(Date() + "-DELETE /deliveries/id");
-  const deliveryId = req.query.deliveryId;
-  database.db.remove({ _id: deliveryId }, {}, function (err, numRemoved) {
-    if (numRemoved === 0) {
-      console.error(Date() + " - " + err);
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(204);
-    }
-  });
-};
+  res.send("Test");
+}
 
 module.exports.register = (apiPrefix, router) => {
   router.get(apiPrefix + "/deliveries", getMethod);

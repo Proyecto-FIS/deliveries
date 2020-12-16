@@ -1,14 +1,13 @@
 FROM node:15-alpine
 
-WORKDIR /coffaine-deliveries/backend
-COPY backend/package.json .
-COPY backend/package-lock.json .
+WORKDIR /deliveries
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
-WORKDIR /coffaine-deliveries/backend
-COPY backend/env env
-COPY backend/source source
-COPY backend/utils utils
+WORKDIR /deliveries
+COPY env env
+COPY source source
 
 EXPOSE 3000
 
