@@ -44,7 +44,6 @@ const getMethod = (req, res) => {
       if (delivery) {
         res.send(delivery);
       } else {
-        // If no document is found, delivery is null
         res.sendStatus(404);
       }
     });
@@ -114,7 +113,7 @@ const putMethod = (req, res) => {
   console.log(Date() + "-PUT /delivery/id");
   delete req.body.delivery._id;
 
-  Product.findOne({ _id: req.query.deliveryId }).exec(function (err, delivery) {
+  Delivery.findOne({ _id: req.query.deliveryId }).exec(function (err, delivery) {
     if (delivery) {
       Delivery.update(
         delivery,
@@ -129,7 +128,6 @@ const putMethod = (req, res) => {
         }
       );
     } else {
-      // If no document is found, product is null
       res.sendStatus(404);
     }
   });
@@ -147,15 +145,10 @@ const putMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const deleteMethod = (req, res) => {
-  console.log(Date() + "-DELETE /delivery/id");
-  Delivery.remove({ _id: req.query.deliveryId }, {}, function (err, numRemoved) {
-    if (numRemoved === 0) {
-      console.error(Date() + " - " + err);
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(204);
-    }
-  });
+  console.log(Date() + "-DELETE /deliveries/id");
+  Delivery.findOneAndDelete({ _id: req.query.deliverId })
+    .then(doc => doc ? res.status(200).json(doc) : res.sendStatus(401))
+    .catch(err => res.status(500).json({ reason: "Database error" }));
 }
 
 module.exports.register = (apiPrefix, router) => {
