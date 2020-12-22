@@ -6,25 +6,23 @@ class DeliveryController {
 
     getMethod(req, res) {
         DeliveryEntry.find({
-            userID: req.body.userID,
-            timestamp: { $lte: req.body.beforeTimestamp }
+            userId: req.body.userId,
         })
-        .select("timestamp operationType products")
-        .limit(req.body.pageSize)
-        .sort("-timestamp")
-        .lean()
-        .exec((err, entries) => {
-            if(err) {
-                res.status(500).json({ reason: "Database error" });
-            } else {
-                res.status(200).json(entries);
-            }
-        });
+            .lean()
+            .exec((err, entries) => {
+                if (err) {
+                    res.status(500).json({ reason: "Database error" });
+                } else {
+                    res.status(200).json(entries);
+                }
+            });
     }
 
-    createEntry(entry) {
-        const deliveryEntry = new DeliveryEntry(entry);
-        return deliveryEntry.save();
+    createEntry(req, res) {
+        new DeliveryEntry(req.body)
+            .save()
+            .then(doc => res.status(200).send(doc._id))
+            .catch(err => res.status(500).json({ reason: "Database error" }));
     }
 
     createEntries(entries) {
@@ -34,6 +32,7 @@ class DeliveryController {
 
     constructor(apiPrefix, router) {
         router.get(apiPrefix + "/delivery", this.getMethod.bind(this));
+        router.post(apiPrefix + "/delivery", this.createEntry.bind(this));
     }
 
 }

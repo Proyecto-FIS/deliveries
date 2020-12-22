@@ -70,10 +70,23 @@ const getMethod = (req, res) => {
 const postMethod = (req, res) => {
   console.log(Date() + "-POST /deliveries");
   const newDelivery = {
+    paymentId: req.body.paymentId,
+    userId: req.body.userId,
+    comments: req.body.comments,
+    createdDate: req.body.createdDate,
+    completedDate: req.body.completedDate,
+    deliveryDate: req.body.deliveryDate,
+    cancelledDate: req.body.cancelledDate,
     name: req.body.name,
-    description: req.body.description,
-    origin: req.body.origin,
-    destination: req.body.destination
+    surnames: req.body.surnames,
+    address: req.body.address,
+    city: req.body.city,
+    province: req.body.province,
+    country: req.body.country,
+    zipCode: req.body.zipCode,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    statusType: req.body.statusType
   };
 
   Delivery.create(newDelivery, (err) => {
