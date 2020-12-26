@@ -20,8 +20,8 @@ const DeliverySchema = new Schema({
     email: String,
     statusType: {
         type: String,
-        enum: ["started", "prepared","delayed","cancelled","completed"],
+        enum: ["started", "prepared", "delayed", "cancelled", "completed"],
     }
-    });
+});
 
-module.exports = mongoose.model("DeliveryEntry", DeliverySchema);
+module.exports = mongoose.model("deliveryModel", DeliverySchema);

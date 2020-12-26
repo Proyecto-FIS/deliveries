@@ -1,5 +1,5 @@
 const express = require("express");
-const Delivery = require("../models/delivery");
+const Delivery = require("../models/deliveryModel");
 
 /**
  * @typedef Delivery
@@ -36,7 +36,7 @@ const Delivery = require("../models/delivery");
  * @returns {DeliveryError}         default - unexpected error
  */
 const getMethod = (req, res) => {
-  console.log(Date() + "-GET /deliveries");
+  console.log(Date() + "-GET /delivery");
   const deliveryId = req.query.deliveryId;
 
   if (deliveryId) {
@@ -67,7 +67,7 @@ const getMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const postMethod = (req, res) => {
-  console.log(Date() + "-POST /deliveries");
+  console.log(Date() + "-POST /delivery");
   const newDelivery = {
     paymentId: req.body.paymentId,
     userId: req.body.userId,
@@ -145,15 +145,15 @@ const putMethod = (req, res) => {
  * @returns {DeliveryError} default - unexpected error
  */
 const deleteMethod = (req, res) => {
-  console.log(Date() + "-DELETE /deliveries/id");
+  console.log(Date() + "-DELETE /delivery/id");
   Delivery.findOneAndDelete({ _id: req.query.deliverId })
     .then(doc => doc ? res.status(200).json(doc) : res.sendStatus(401))
     .catch(err => res.status(500).json({ reason: "Database error" }));
 }
 
 module.exports.register = (apiPrefix, router) => {
-  router.get(apiPrefix + "/deliveries", getMethod);
-  router.post(apiPrefix + "/deliveries", postMethod);
-  router.put(apiPrefix + "/deliveries", putMethod);
-  router.delete(apiPrefix + "/deliveries", deleteMethod);
+  router.get(apiPrefix + "/delivery", getMethod);
+  router.post(apiPrefix + "/delivery", postMethod);
+  router.put(apiPrefix + "/delivery", putMethod);
+  router.delete(apiPrefix + "/delivery", deleteMethod);
 };
