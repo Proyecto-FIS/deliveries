@@ -1,5 +1,7 @@
 const express = require("express");
 const Delivery = require("../models/Delivery");
+const AuthorizeJWT = require("../middlewares/AuthorizeJWT");
+const Validators = require("../middlewares/Validators");
 
 
 class DeliveryController {
@@ -60,10 +62,14 @@ class DeliveryController {
     }
 
     constructor(apiPrefix, router) {
-        router.get(apiPrefix + "/deliveries", this.getMethod.bind(this));
-        router.post(apiPrefix + "/deliveries", this.postMethod.bind(this));
-        router.put(apiPrefix + "/deliveries", this.putMethod.bind(this));
-        router.delete(apiPrefix + "/deliveries", this.deleteMethod.bind(this));
+
+        const userTokenValidators = [Validators.Required("userToken"), AuthorizeJWT];
+
+        router.get(apiPrefix + "/deliveries", ...userTokenValidators, this.getMethod.bind(this));
+        router.post(apiPrefix + "/deliveries", ...userTokenValidators, this.postMethod.bind(this));
+        router.put(apiPrefix + "/deliveries", ...userTokenValidators, this.putMethod.bind(this));
+        router.delete(apiPrefix + "/deliveries", ...userTokenValidators, this.deleteMethod.bind(this));
+
     }
 
 }
