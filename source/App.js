@@ -2,6 +2,7 @@ const express = require("express");
 const swagger = require("./swagger");
 const DatabaseConnection = require("./DatabaseConnection");
 const DeliveryController = require("./routes/DeliveryController");
+const CircuitBreaker = require("./CircuitBreaker");
 
 class App {
 
@@ -21,6 +22,8 @@ class App {
         require("./routes/deliveries").register(apiPrefix, this.router);
         require("./routes/return").register(apiPrefix, this.router);
     
+        CircuitBreaker.initHystrixDashboard(this.app);
+        
         this.app.use(App.errorHandler);
 
         swagger.setupSwagger(this.app, this.port);
