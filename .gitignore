@@ -1,3 +1,10 @@
+# general modules
 node_modules/
 .devcontainer
+
+# data
 contacts.json
+
+# dotenv environment variables file
+*.env
+
