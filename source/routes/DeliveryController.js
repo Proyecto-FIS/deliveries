@@ -27,6 +27,7 @@ class DeliveryController {
     postMethod(req, res) {
 
         console.log(Date() + "-POST /deliveries");
+        console.log(req.body);
 
         const newDelivery = new Delivery(req.body);
 
@@ -39,17 +40,12 @@ class DeliveryController {
     putMethod(req, res) {
 
         console.log(Date() + "-PUT /deliveries");
+        console.log(req.body);
 
-        Delivery.findOneAndUpdate({ _id: req.body.delivery._id, userID: req.query.userId }, req.body.delivery)
-            .then(doc => {
-                if (doc) {
-                    return Delivery.findById(doc._id);
-                } else {
-                    res.sendStatus(401);
-                }
-            })
-            .then(doc => res.status(200).json(doc))
-            .catch(err => res.status(500).json({ reason: "Database error" }));
+        Delivery.findOneAndUpdate({ _id: req.body._id }, req.body, {
+            new: true
+        }).then(doc => doc ? res.status(200).json(doc): res.sendStatus(401))
+          .catch(err => res.status(500).json({ reason: "Database error", details: err }));
     }
 
     deleteMethod(req, res) {
