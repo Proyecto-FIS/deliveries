@@ -17,7 +17,7 @@ class DeliveryController {
             .lean()
             .exec((err, entries) => {
                 if (err) {
-                    res.status(500).json({ reason: "Database error" });
+                    res.status(500).json({ reason: "Database error", details: err  });
                 } else {
                     res.status(200).json(entries);
                 }
@@ -42,19 +42,19 @@ class DeliveryController {
         console.log(Date() + "-PUT /deliveries");
         console.log(req.body);
 
-        Delivery.findOneAndUpdate({ _id: req.body._id }, req.body, {
-            new: true
-        }).then(doc => doc ? res.status(200).json(doc): res.sendStatus(401))
-          .catch(err => res.status(500).json({ reason: "Database error", details: err }));
+        Delivery.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true })
+            .then(doc => doc ? res.status(200).json(doc) : res.sendStatus(401))
+            .catch(err => res.status(500).json({ reason: "Database error", details: err }));
     }
 
     deleteMethod(req, res) {
 
         console.log(Date() + "-DELETE /deliveries");
+        console.log(req.body);
 
         Delivery.findOneAndDelete({ _id: req.query.deliveryId })
             .then(doc => doc ? res.status(200).json(doc) : res.sendStatus(401))
-            .catch(err => res.status(500).json({ reason: "Database error" }));
+            .catch(err => res.status(500).json({ reason: "Database error", details: err }));
     }
 
     constructor(apiPrefix, router) {
