@@ -29,7 +29,27 @@ class DeliveryController {
         console.log(Date() + "-POST /deliveries");
         console.log(req.body);
 
-        const newDelivery = new Delivery(req.body);
+        const data = {
+            paymentId: req.body.historyId,
+            userId: req.body.userId,
+            comments: req.body.comments,
+            createdDate: Date(),
+            completedDate: req.body.completedDate,
+            deliveryDate: Date(),
+            cancelledDate: req.body.cancelledDate,
+            name: req.body.profile.name,
+            surnames: req.body.profile.surnames,
+            address: req.body.profile.address,
+            city: req.body.profile.city,
+            province: req.body.profile.province,
+            country: req.body.profile.country,
+            zipCode: req.body.profile.zipCode,
+            phoneNumber: req.body.profile.phoneNumber,
+            email: req.body.profile.email,
+            statusType: "started"
+          };
+
+        const newDelivery = new Delivery(data);
 
         newDelivery
             .save()
@@ -40,9 +60,9 @@ class DeliveryController {
     putMethod(req, res) {
 
         console.log(Date() + "-PUT /deliveries");
-        console.log(req.body);
+        console.log(req.body.delivery);
 
-        Delivery.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true })
+        Delivery.findOneAndUpdate({ _id: req.body.delivery._id }, req.body.delivery, { new: true })
             .then(doc => doc ? res.status(200).json(doc) : res.sendStatus(401))
             .catch(err => res.status(500).json({ reason: "Database error", details: err }));
     }
@@ -62,7 +82,7 @@ class DeliveryController {
         const userTokenValidators = [Validators.Required("userToken"), AuthorizeJWT];
 
         router.get(apiPrefix + "/deliveries", ...userTokenValidators, this.getMethod.bind(this));
-        router.post(apiPrefix + "/deliveries", ...userTokenValidators, this.postMethod.bind(this));
+        router.post(apiPrefix + "/deliveries", this.postMethod.bind(this));
         router.put(apiPrefix + "/deliveries", ...userTokenValidators, this.putMethod.bind(this));
         router.delete(apiPrefix + "/deliveries", ...userTokenValidators, this.deleteMethod.bind(this));
 

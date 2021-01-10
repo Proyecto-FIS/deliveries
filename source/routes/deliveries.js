@@ -6,6 +6,7 @@ const Delivery = require("../models/deliveryModel");
  * @property {integer} _id           - UUID
  * @property {integer} _paymentId    - Payment identifier
  * @property {integer} _userId       - User identifier
+ * @property {integer} _providerId   - Provider identifier
  * @property {string}  comments      - Additonal notes for delivering
  * @property {string}  statusType    - Delivery status {STARTED, PREPARED, DELAYED, CANCELLED, COMPLETED}
  * @property {string}  createdDate   - Delivery date started
@@ -21,6 +22,21 @@ const Delivery = require("../models/deliveryModel");
  * @property {integer}  zipCode      - Receiver zipCode
  * @property {integer}  phoneNumber  - Receiver phone number
  * @property {string}  email         - Receiver email
+ */
+
+ 
+/**
+ * @typedef BillingProfile
+ * @property {string} _id                   - Unique identifier (ignored in POST requests due to id collision)
+ * @property {string} name.required         - Receiver name
+ * @property {string} surname.required      - Receiver surname
+ * @property {string} address.required      - Address
+ * @property {string} city.required         - City
+ * @property {string} province.required     - Province or state
+ * @property {string} country.required      - Country
+ * @property {integer} zipCode.required     - Zip code
+ * @property {integer} phoneNumber.required - Phone number
+ * @property {string} email.required        - Receiver email
  */
 
 
@@ -59,7 +75,8 @@ const getMethod = (req, res) => {
  * Create a new delivery when a payment is completed
  * @route POST /deliveries
  * @group Deliveries - Deliveries per user
- * @param {Delivery} delivery.body.required - New delivery
+ * @param {string}  userToken.query.required - User JWT token
+ * @param {DeliveryPost.model} delivery.body.required - User profile
  * @returns {integer} 200 - Returns the created delivery
  * @returns {ValidationError}       400 - Supplied parameters are invalid
  * @returns {UserAuthError}         401 - User is not authorized to perform this operation
@@ -157,3 +174,39 @@ module.exports.register = (apiPrefix, router) => {
   router.put(apiPrefix + "/delivery", putMethod);
   router.delete(apiPrefix + "/delivery", deleteMethod);
 };
+
+
+
+/**
+ * @typedef DeliveryPost
+ * @property {string}  historyId.body.required - History entry payment
+ * @property {string}  userId.body.required - User owner of delivery
+ * @property {BillingProfile.model} profile - Billing profile for delivery
+ * @property {Products.model} products - Billing profile for delivery
+ */
+
+ /**
+ * @typedef BillingProfile
+ * @property {string} _id                   - Unique identifier (ignored in POST requests due to id collision)
+ * @property {string} name.required         - Receiver name
+ * @property {string} surname.required      - Receiver surname
+ * @property {string} address.required      - Address
+ * @property {string} city.required         - City
+ * @property {string} province.required     - Province or state
+ * @property {string} country.required      - Country
+ * @property {integer} zipCode.required     - Zip code
+ * @property {integer} phoneNumber.required - Phone number
+ * @property {string} email.required        - Receiver email
+ */
+
+ /**
+ * @typedef Product
+ * @property {string} _id               - Product identifier
+ * @property {number} quantity          - Number of products of this type
+ * @property {number} unitPriceEuros    - Price per unit, in euros
+ */
+
+/**
+ * @typedef Products
+ * @property {Array.<Product>} products - Products which have been bought
+ */
