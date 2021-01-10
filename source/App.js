@@ -3,6 +3,7 @@ const swagger = require("./swagger");
 const DatabaseConnection = require("./DatabaseConnection");
 const DeliveryController = require("./routes/DeliveryController");
 const CircuitBreaker = require("./CircuitBreaker");
+const cors = require("cors");
 
 class App {
 
