@@ -13,6 +13,8 @@ class App {
         this.port = process.env.PORT || 3000;
         this.db = new DatabaseConnection();
 
+        this.app.use(cors());
+        this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.json());
         this.app.use(this.router);
 
