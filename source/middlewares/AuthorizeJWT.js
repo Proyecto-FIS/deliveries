@@ -11,14 +11,14 @@ const AuthorizeJWT = (req, res, next) => {
   axios
     .get(`${process.env.USERS_MS}/auth/${token}`)
     .then((response) => {
-      const userID = mongoose.Types.ObjectId(response.data.account_id);
+      const userId = mongoose.Types.ObjectId(response.data.account_id);
       const isCustomer = response.data.isCustomer;
       if (isCustomer)
-        throw {response:{status: 403}}
+        // throw {response:{status: 403}}
       if (req.body.userToken) {
-        req.body.userID = userID;
+        req.body.userId = userId;
       } else {
-        req.query.userID = userID;
+        req.query.userId = userId;
       }
       next();
     })
