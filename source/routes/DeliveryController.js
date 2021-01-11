@@ -135,7 +135,7 @@ class DeliveryController {
         const userTokenValidators = [Validators.Required("userToken"), AuthorizeJWT];
 
         router.get(apiPrefix + "/deliveries", ...userTokenValidators, this.getMethod.bind(this));
-        router.post(apiPrefix + "/deliveries", this.postMethod.bind(this));
+        router.post(apiPrefix + "/deliveries", ...userTokenValidators, this.postMethod.bind(this));
         router.put(apiPrefix + "/deliveries", ...userTokenValidators, this.putMethod.bind(this));
         router.delete(apiPrefix + "/deliveries", ...userTokenValidators, this.deleteMethod.bind(this));
 
@@ -171,7 +171,7 @@ module.exports = DeliveryController;
 /**
  * @typedef DeliveryPost
  * @property {string}  historyId.body.required - History entry payment
- * @property {string}  userId.body.required - User owner of delivery
+ * @property {string}  comments.body.required - Additonal notes for delivering
  * @property {BillingProfile.model} profile - Billing profile for delivery
  * @property {Products.model} products - Billing profile for delivery
  */
