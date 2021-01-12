@@ -11,7 +11,7 @@ class DeliveryController {
      * Get all deliveries if empty, or selected delivery by _id
      * @route GET /deliveries
      * @group Deliveries - Deliveries per user
-     * @param   {Delivery.model} delivery.body.required -  If empty returns all deliveries
+     * @param {string}  userToken.query.required  - User JWT token
      * @returns {Delivery}              200 - Returns wheter selected delivery or all deliveries
      * @returns {ValidationError}       400 - Supplied parameters are invalid
      * @returns {UserAuthError}         401 - User is not authorized to perform this operation
