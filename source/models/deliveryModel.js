@@ -10,7 +10,7 @@ const DeliverySchema = new Schema({
     deliveryDate: String,
     cancelledDate: String,
     name: String,
-    surnames: String,
+    surname: String,
     address: String,
     city: String,
     province: String,

@@ -23,7 +23,7 @@ const DeliverySchema = new Schema({
         minlength: 1,
         maxlength: 50,
     },
-    surnames: {
+    surname: {
         type: String,
         required: [true, "A receiver surnames is required"],
         minlength: 1,

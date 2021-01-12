@@ -65,7 +65,7 @@ class DeliveryController {
             deliveryDate: Date(),
             cancelledDate: req.body.cancelledDate,
             name: req.body.profile.name,
-            surnames: req.body.profile.surnames,
+            surname: req.body.profile.surname,
             address: req.body.profile.address,
             city: req.body.profile.city,
             province: req.body.profile.province,
@@ -158,7 +158,7 @@ module.exports = DeliveryController;
  * @property {string}  cancelledDate - Delivery date cancelled
  * @property {string}  deliveryDate  - Estimated delivery date
  * @property {string}  name          - Receiver name
- * @property {string}  surnames      - Receiver surnames
+ * @property {string}  surname       - Receiver surnames
  * @property {string}  address       - Receiver address
  * @property {string}  city          - Receiver city
  * @property {string}  province      - Receiver province

@@ -36,7 +36,7 @@ const postMethod = (req, res) => {
     deliveryDate: req.body.deliveryDate,
     cancelledDate: req.body.cancelledDate,
     name: req.body.name,
-    surnames: req.body.surnames,
+    surname: req.body.surname,
     address: req.body.address,
     city: req.body.city,
     province: req.body.province,
