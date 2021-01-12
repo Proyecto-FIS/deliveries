@@ -173,7 +173,7 @@ module.exports = DeliveryController;
  * @property {string}  historyId.body.required - History entry payment
  * @property {string}  comments.body.required - Additonal notes for delivering
  * @property {BillingProfile.model} profile - Billing profile for delivery
- * @property {Products.model} products - Billing profile for delivery
+ * @property {Array.<Product>} products products - Product cart to delivery
  */
 
 /**
@@ -196,8 +196,3 @@ module.exports = DeliveryController;
 * @property {number} quantity          - Number of products of this type
 * @property {number} unitPriceEuros    - Price per unit, in euros
 */
-
-/**
- * @typedef Products
- * @property {Array.<Product>} products - Products which have been bought
- */
