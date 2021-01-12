@@ -58,7 +58,7 @@ class DeliveryController {
 
         const data = {
             paymentId: req.body.historyId,
-            userId: req.body.userId,
+            userId: req.body.userId || req.query.userId,
             comments: req.body.comments,
             createdDate: Date(),
             completedDate: req.body.completedDate,
