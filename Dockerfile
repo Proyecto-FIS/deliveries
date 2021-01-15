@@ -1,11 +1,11 @@
 FROM node:15-alpine
 
-WORKDIR /deliveries
+WORKDIR /coffaine-deliveries
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
 
-WORKDIR /deliveries
+WORKDIR /coffaine-deliveries
 COPY env env
 COPY source source
 
