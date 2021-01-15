@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const DeliverySchema = new Schema({
     paymentId: Schema.Types.ObjectId,
+    providerId: Schema.Types.ObjectId,
     userId: Schema.Types.ObjectId,
     comments: {
         type: String,

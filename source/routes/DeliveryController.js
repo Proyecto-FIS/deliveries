@@ -2,6 +2,9 @@ const express = require("express");
 const Delivery = require("../models/Delivery");
 const AuthorizeJWT = require("../middlewares/AuthorizeJWT");
 const Validators = require("../middlewares/Validators");
+const axios = require("axios");
+const mongoose = require("mongoose");
+const { response } = require("express");
 
 
 class DeliveryController {
@@ -23,10 +26,12 @@ class DeliveryController {
 
         console.log(Date() + "-GET /deliveries");
 
-        Delivery.find({
-            userId: req.query.userId,
-        })
-            .select("-userId")
+        const userId = req.query.userId || req.body.userId;
+
+        console.log("userId= " + userId);
+
+        Delivery.find({ $or: [{ userId: userId }, { providerId: userId }] })
+            .select()
             .lean()
             .exec((err, entries) => {
                 if (err) {
@@ -36,7 +41,6 @@ class DeliveryController {
                 }
             });
     }
-
 
     /**
      * Create a new delivery when a payment is completed
@@ -51,7 +55,7 @@ class DeliveryController {
      * @returns {DeliveryError} default - unexpected error
      */
 
-    postMethod(req, res) {
+    async postMethod(req, res) {
 
         console.log(Date() + "-POST /deliveries");
         console.log(req.body);
@@ -76,6 +80,20 @@ class DeliveryController {
             statusType: "started"
         };
 
+        let identifiers = req.body.products.reduce((acc, current) => acc.concat(current._id + ","), "");
+        identifiers = identifiers.substring(0, identifiers.length - 1);
+        console.log("Products1: " + identifiers);
+
+        let productsIds = req.body.products.map(product => product._id);
+        console.log("Products2: " + productsIds);
+
+        const providersIds =
+            await axios
+                .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
+                .then(response => response.data.map((f, i) => (i === 0) ? f.providerId : 0))
+                .catch(err => { console.log(err); });
+
+        data.providerId = providersIds;
         const newDelivery = new Delivery(data);
 
         newDelivery

@@ -1,6 +1,6 @@
 const express = require("express");
 const Delivery = require("../models/deliveryModel");
- 
+
 
 
 
@@ -26,7 +26,9 @@ const getMethod = (req, res) => {
 
 
 const postMethod = (req, res) => {
+
   console.log(Date() + "-POST /delivery");
+
   const newDelivery = {
     paymentId: req.body.paymentId,
     userId: req.body.userId,
@@ -46,6 +48,18 @@ const postMethod = (req, res) => {
     email: req.body.email,
     statusType: req.body.statusType
   };
+
+  // Get providers ids
+  let productsIds = req.body.products.reduce((acc, current) => acc.concat(current._id + ","), "");
+  productsIds = productsIds.substring(0, productssIds.length - 1);
+  
+  console.log(productsIds);
+
+  const providerId = axios
+    .get(process.env.PRODUCTS_MS + "/products-several", { params: { productsIds } })
+    .then(response => { response.data.map(function (product) { product.providerId })})
+    .catch((err) => { console.log(err)});
+
 
   Delivery.create(newDelivery, (err) => {
     if (err) {
