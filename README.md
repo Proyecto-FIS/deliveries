@@ -12,6 +12,7 @@ Environment variables:
 - HOSTNAME: only needed in production environment. It shouldn't be set in any other one
 - SWAGGER_SCHEMA: http or https. It is used for Swagger "Try it" operations
 - USERS_MS: URL pointing to the users microservice (including /api/version)
+- PRODUCTS_MS: URL pointing to the users microservice (including /api/version)
 - TEST_USERNAME: Test username (only in test environment)
 - TEST_PASSWORD: Test user password (only in test environment)
 
