@@ -55,7 +55,7 @@ class DeliveryController {
      * @returns {DeliveryError} default - unexpected error
      */
 
-    async postMethod(req, res) {
+    postMethod(req, res) {
 
         console.log(Date() + "-POST /deliveries");
         console.log(req.body);
@@ -82,24 +82,24 @@ class DeliveryController {
 
         let identifiers = req.body.products.reduce((acc, current) => acc.concat(current._id + ","), "");
         identifiers = identifiers.substring(0, identifiers.length - 1);
-        console.log("Products1: " + identifiers);
+        console.log(identifiers);
 
-        let productsIds = req.body.products.map(product => product._id);
-        console.log("Products2: " + productsIds);
+        /*let pIds = req.body.products.map(product => product._id);
+        let productsIds = [...new Set(pIds)];
+        console.log(productsIds);*/
 
-        const providersIds =
-            await axios
-                .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
-                .then(response => response.data.map((f, i) => (i === 0) ? f.providerId : 0))
-                .catch(err => { console.log(err); });
-
-        data.providerId = providersIds;
-        const newDelivery = new Delivery(data);
-
-        newDelivery
-            .save()
-            .then(doc => res.status(200).send(doc._id))
+        const deliveryDetails = axios
+            .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
+            .then(response => response.data.map((p) => {
+                data.providerId = p.providerId;
+                const newDelivery = new Delivery(data);
+                newDelivery.save()
+                console.log(newDelivery);
+                return newDelivery._id;
+            }))
+            .then(doc => res.status(200).send(doc))
             .catch(err => res.status(500).json({ reason: "Database error", details: err }));
+
     }
 
 

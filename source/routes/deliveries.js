@@ -1,5 +1,5 @@
 const express = require("express");
-const Delivery = require("../models/deliveryModel");
+const Delivery = require("../models/Delivery");
 
 
 
