@@ -1,5 +1,5 @@
 const express = require("express");
-const Delivery = require("../models/Delivery");
+const Delivery = require("../models/delivery");
 const AuthorizeJWT = require("../middlewares/AuthorizeJWT");
 const Validators = require("../middlewares/Validators");
 const axios = require("axios");
