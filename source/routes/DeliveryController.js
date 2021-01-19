@@ -3,7 +3,6 @@ const Delivery = require("../models/delivery");
 const AuthorizeJWT = require("../middlewares/AuthorizeJWT");
 const Validators = require("../middlewares/Validators");
 const axios = require("axios");
-const mongoose = require("mongoose");
 const { response } = require("express");
 
 
