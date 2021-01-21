@@ -89,13 +89,32 @@ class DeliveryController {
 
         const deliveryDetails = axios
             .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
-            .then(response => response.data.map((p) => {
-                data.providerId = p.providerId;
+            .then(response => response.data.reduce((acc, product) => {
+                const repeatIndex = acc.findIndex(p => p.providerId === product.providerId);
+                if (repeatIndex != -1) {
+                    console.log("ProviderId detected");
+                    acc[repeatIndex].products.push(product);
+                    return acc;
+                } else {
+                    const delivery = {
+                        providerId: product.providerId,
+                        products: [{ product }]
+                    }
+                    acc.push(delivery);
+                    return acc;
+                }
+            }, []))
+            .then(response => response.map(delivery => {
+                console.log(response);
+                data.providerId = delivery.providerId;
+                const totalPrice = delivery.products.reduce((acc, p) => acc + p.unitPriceEuros, 0);
+                console.log("Total price: " + totalPrice);
                 const newDelivery = new Delivery(data);
-                newDelivery.save()
+                newDelivery.save();
                 console.log(newDelivery);
-                return newDelivery._id;
-            }))
+                return newDelivery._id
+            }
+            ))
             .then(doc => res.status(200).send(doc))
             .catch(err => res.status(500).json({ reason: "Database error", details: err }));
 
