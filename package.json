@@ -1,5 +1,5 @@
 {
-    "name": "backend",
+    "name": "coffaine-deliveries",
     "version": "1.0.0",
     "description": "Backend for deliveries microservice",
     "scripts": {
@@ -8,7 +8,7 @@
         "test": "jest ./test --silent",
         "coverage": "npm test -- --coverage"
     },
-    "author": "danmarrod@github.com, jorgeous16@github.com",
+    "author": "danmarrod@github.com",
     "license": "MIT",
     "dependencies": {
         "axios": "^0.21.1",
