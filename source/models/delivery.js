@@ -1,6 +1,34 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+
+const ProductSchema = new Schema({
+    _id: Schema.ObjectId,
+    name: {
+        type: String,
+        required: [true, "A receiver name is required"],
+        minlength: 1,
+        maxlength: 50,
+    },
+    description: {
+        type: String,
+        minlength: [25, "Minimun description length 25 characters"],
+    },
+    quantity: {
+        type: Number,
+        min: 1,
+        required: true,
+        validate: {
+            validator: Number.isInteger
+        }
+    },
+    unitPriceEuros: {
+        type: Number,
+        min: 0,
+        required: true
+    }
+});
+
 const DeliverySchema = new Schema({
     paymentId: Schema.Types.ObjectId,
     providerId: Schema.Types.ObjectId,
@@ -14,7 +42,11 @@ const DeliverySchema = new Schema({
     createdDate: {
         type: Date,
         default: Date.now
-    }, 
+    },
+    products: {
+        type: [ProductSchema],
+        required: true
+    },
     completedDate: Date,
     deliveryDate: Date,
     cancelledDate: Date,
@@ -76,6 +108,6 @@ const DeliverySchema = new Schema({
         required: true,
         enum: ["INICIADO", "PREPARADO", "RETRASADO", "CANCELADO", "COMPLETADO"],
     }
-    });
+});
 
 module.exports = mongoose.model("Delivery", DeliverySchema);

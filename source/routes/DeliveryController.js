@@ -90,15 +90,19 @@ class DeliveryController {
         const deliveryDetails = axios
             .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
             .then(response => response.data.reduce((acc, product) => {
+                const productPaid = req.body.products.find(p => p._id === product._id);
+                productPaid.name = product.name;
+                productPaid.description = product.description;
+                console.log("Producto adquirido: " + Object.values(productPaid));
                 const repeatIndex = acc.findIndex(p => p.providerId === product.providerId);
                 if (repeatIndex != -1) {
                     console.log("ProviderId detected");
-                    acc[repeatIndex].products.push(product);
+                    acc[repeatIndex].products.push(productPaid);
                     return acc;
                 } else {
                     const delivery = {
                         providerId: product.providerId,
-                        products: [{ product }]
+                        products: [productPaid]
                     }
                     acc.push(delivery);
                     return acc;
@@ -107,8 +111,7 @@ class DeliveryController {
             .then(response => response.map(delivery => {
                 console.log(response);
                 data.providerId = delivery.providerId;
-                const totalPrice = delivery.products.reduce((acc, p) => acc + p.unitPriceEuros, 0);
-                console.log("Total price: " + totalPrice);
+                data.products = delivery.products;
                 const newDelivery = new Delivery(data);
                 newDelivery.save();
                 console.log(newDelivery);
@@ -116,7 +119,7 @@ class DeliveryController {
             }
             ))
             .then(doc => res.status(200).send(doc))
-            .catch(err => res.status(500).json({ reason: "Database error", details: err }));
+            .catch(err => console.log(err));
 
     }
 
