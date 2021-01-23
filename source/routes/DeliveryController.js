@@ -76,7 +76,7 @@ class DeliveryController {
             zipCode: req.body.profile.zipCode,
             phoneNumber: req.body.profile.phoneNumber,
             email: req.body.profile.email,
-            statusType: "started"
+            statusType: "INICIADO"
         };
 
         let identifiers = req.body.products.reduce((acc, current) => acc.concat(current._id + ","), "");

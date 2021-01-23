@@ -74,7 +74,7 @@ const DeliverySchema = new Schema({
     statusType: {
         type: String,
         required: true,
-        enum: ["started", "prepared", "delayed", "cancelled", "completed"],
+        enum: ["INICIADO", "PREPARADO", "RETRASADO", "CANCELADO", "COMPLETADO"],
     }
     });
 
