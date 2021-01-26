@@ -19,11 +19,8 @@ class App {
         this.app.use(express.json());
         this.app.use(this.router);
 
-        // Route registration
         const apiPrefix = swagger.getBasePath();
         this.deliveryController = new DeliveryController(apiPrefix, this.router);
-        require("./routes/deliveries").register(apiPrefix, this.router);
-        require("./routes/return").register(apiPrefix, this.router);
     
         CircuitBreaker.initHystrixDashboard(this.app);
         

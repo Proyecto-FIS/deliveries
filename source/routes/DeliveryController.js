@@ -83,10 +83,6 @@ class DeliveryController {
         identifiers = identifiers.substring(0, identifiers.length - 1);
         console.log(identifiers);
 
-        /*let pIds = req.body.products.map(product => product._id);
-        let productsIds = [...new Set(pIds)];
-        console.log(productsIds);*/
-
         const deliveryDetails = axios
             .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
             .then(response => response.data.reduce((acc, product) => {
