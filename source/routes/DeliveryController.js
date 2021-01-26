@@ -201,6 +201,7 @@ module.exports = DeliveryController;
  * @property {integer}  zipCode      - Receiver zipCode
  * @property {integer}  phoneNumber  - Receiver phone number
  * @property {string}  email         - Receiver email
+ * @property {Array.<ProductDelivery>} products - Product cart to delivery by provider
  */
 
 /**
@@ -228,6 +229,16 @@ module.exports = DeliveryController;
 /**
 * @typedef Product
 * @property {string} _id               - Product identifier
+* @property {number} quantity          - Number of products of this type
+* @property {number} unitPriceEuros    - Price per unit, in euros
+*/
+
+
+/**
+* @typedef ProductDelivery
+* @property {string} _id               - Product identifier
+* @property {string} name              - Name product of the provider
+* @property {string} description       - Description product of the provider
 * @property {number} quantity          - Number of products of this type
 * @property {number} unitPriceEuros    - Price per unit, in euros
 */
