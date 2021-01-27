@@ -4,6 +4,26 @@ const AuthorizeJWT = require("../middlewares/AuthorizeJWT");
 const Validators = require("../middlewares/Validators");
 const axios = require("axios");
 const { response } = require("express");
+const createCircuitBreaker = require("../CircuitBreaker").createCircuitBreaker;
+
+const productsService = createCircuitBreaker({
+    name: "productsService",
+    errorThreshold: 20,
+    timeout: 8000,
+    healthRequests: 5,
+    sleepTimeMS: 100,
+    maxRequests: 0,
+    errorHandler: (err) => false,
+    request: (identifiers) => axios.get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } }),
+    fallback: (err, args) => {
+        if(err && err.isAxiosError) throw err;
+        throw ({
+            response: {
+                status: 503
+            }
+        });
+    }
+  });
 
 
 class DeliveryController {
@@ -20,6 +40,8 @@ class DeliveryController {
      * @returns {DatabaseError}         500 - Database error
      * @returns {DeliveryError}         default - unexpected error
      */
+
+     
 
     getMethod(req, res) {
 
@@ -83,8 +105,7 @@ class DeliveryController {
         identifiers = identifiers.substring(0, identifiers.length - 1);
         console.log(identifiers);
 
-        const deliveryDetails = axios
-            .get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } })
+        const deliveryDetails = productsService.execute(identifiers)
             .then(response => response.data.reduce((acc, product) => {
                 const productPaid = req.body.products.find(p => p._id === product._id);
                 productPaid.name = product.name;
