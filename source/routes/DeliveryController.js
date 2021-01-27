@@ -115,7 +115,7 @@ class DeliveryController {
             }
             ))
             .then(doc => res.status(200).send(doc))
-            .catch(err => console.log(err));
+            .catch(err => res.status(500).json({ reason: "Database error" }));
 
     }
 

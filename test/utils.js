@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const axios = require("axios");
+const request = require("supertest");
 
 module.exports.makeRequest = () => request(`http://localhost:${process.env.PORT}`);
 
@@ -55,7 +57,7 @@ module.exports.createExpressApp = (controller, path, ...middlewares) => {
 module.exports.authTestUser = () => {
     return new Promise((resolve, reject) => {
 
-        let userToken, userID;
+        let userToken, userId;
 
         axios.post(`${process.env.USERS_MS}/auth/login`, {
             username: process.env.TEST_USERNAME,
@@ -66,7 +68,7 @@ module.exports.authTestUser = () => {
             return axios.get(`${process.env.USERS_MS}/auth/${userToken}`);
         })
         .then(response => {
-            userID = response.data.account_id;
+            userId = response.data.account_id;
             resolve({ userId, userToken });
         })
         .catch(err => reject(err));

@@ -100,13 +100,13 @@ describe("DeliveryController", () => {
             .post(testURL)
             .query({ userId: mongoose.Types.ObjectId().toHexString() })
             .send({
-                profile: {
+                delivery: {
                     name: "name",
                     surname: "surname",
                     address: "address"
                     // Missing fields
                 }
             })
-            .expect(500, { reason: "Database error" });
+            .expect(500, { });
     });
 });
