@@ -28,6 +28,7 @@
     },
     "jest": {
         "globalSetup": "./test/setup.js",
+        "globalTeardown": "./test/teardown.js",
         "collectCoverageFrom": [
             "./source/**/*.js"
         ],

@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 
 class DatabaseConnection {
 
-    setup(done) {
+    setup() {
         console.log(`[DB] Connecting to ${process.env.DBSTRING}`);
 
         mongoose.connection.once('connected', () => {
             console.log("[DB] Connection Established");
-            done();
         });
     
         mongoose.connection.on("reconnected", () => {
@@ -27,12 +26,18 @@ class DatabaseConnection {
         });
     
         // Create DB connection
-        mongoose.connect(process.env.DBSTRING, { useNewUrlParser: true, useUnifiedTopology: true});
+        return mongoose.connect(process.env.DBSTRING, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
     }
 
-    close(done) {
-        mongoose.connection.close((err) => {
-            done();
+    close() {
+        return new Promise((resolve, reject) => {
+            mongoose.connection.close(err => {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
         });
     }
 }

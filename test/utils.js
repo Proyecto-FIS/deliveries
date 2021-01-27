@@ -67,7 +67,7 @@ module.exports.authTestUser = () => {
         })
         .then(response => {
             userID = response.data.account_id;
-            resolve({ userID, userToken });
+            resolve({ userId, userToken });
         })
         .catch(err => reject(err));
     });
