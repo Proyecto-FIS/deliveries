@@ -16,14 +16,14 @@ const productsService = createCircuitBreaker({
     errorHandler: (err) => false,
     request: (identifiers) => axios.get(`${process.env.PRODUCTS_MS}/products-several`, { params: { identifiers } }),
     fallback: (err, args) => {
-        if(err && err.isAxiosError) throw err;
+        if (err && err.isAxiosError) throw err;
         throw ({
             response: {
                 status: 503
             }
         });
     }
-  });
+});
 
 
 class DeliveryController {
@@ -41,7 +41,7 @@ class DeliveryController {
      * @returns {DeliveryError}         default - unexpected error
      */
 
-     
+
 
     getMethod(req, res) {
 
@@ -191,8 +191,8 @@ class DeliveryController {
         const userTokenValidators = [Validators.Required("userToken"), AuthorizeJWT];
 
         router.get(apiPrefix + "/deliveries", ...userTokenValidators, this.getMethod.bind(this));
-        router.post(apiPrefix + "/deliveries", ...userTokenValidators, this.postMethod.bind(this));
-        router.put(apiPrefix + "/deliveries", ...userTokenValidators, this.putMethod.bind(this));
+        router.post(apiPrefix + "/deliveries", ...userTokenValidators, Validators.Required("profile"), Validators.Required("historyId"), this.postMethod.bind(this));
+        router.put(apiPrefix + "/deliveries", ...userTokenValidators, Validators.Required("delivery"), this.putMethod.bind(this));
         router.delete(apiPrefix + "/deliveries", ...userTokenValidators, this.deleteMethod.bind(this));
 
     }
