@@ -111,9 +111,6 @@ describe("Delivery API", () => {
             unitPriceEuros: 20
         }]
 
-        const updatedZip = 44444;
-        let deliveryId;
-
         return makeRequest()
             .post(testURL)
             .query({ userToken })
